@@ -42,6 +42,42 @@ header.top{position:sticky;top:0;z-index:50;background:#050505;color:#f7f2ea;bor
 nav.main{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 nav.main a{text-decoration:none;font-weight:600;padding:9px 15px;border-radius:999px;font-size:16px;color:#f7f2ea}
 nav.main a:hover{background:rgba(255,255,255,.13)}
+
+/* Header crew animation — the crew at work on a chimney, drifting across the dark header */
+.crew-scene{width:100%;max-width:640px;margin:2px auto 0}
+.crew-scene svg{width:100%;height:auto;display:block}
+@keyframes drift{0%,100%{transform:translateX(0)}50%{transform:translateX(14px)}}
+@keyframes sweepArm{0%,100%{transform:rotate(16deg)}50%{transform:rotate(-24deg)}}
+@keyframes brushDip{0%,100%{transform:translateY(-3px)}50%{transform:translateY(5px)}}
+@keyframes brushSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+@keyframes legKick{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(9deg)}}
+@keyframes smokePuff{0%{transform:translate(0,0) scale(.55);opacity:0}18%{opacity:.85}100%{transform:translate(22px,-46px) scale(1.5);opacity:0}}
+@keyframes sparkFlicker{0%,100%{opacity:.25}50%{opacity:1}}
+.drift{animation:drift 9s ease-in-out infinite}
+.sweeper{animation:bob 2.6s ease-in-out infinite}
+.sweep-arm{transform-origin:196px 62px;animation:sweepArm 1.5s ease-in-out infinite}
+.brush-dip{animation:brushDip 1.5s ease-in-out infinite}
+.brush-head{transform-origin:206px 44px;animation:brushSpin 2.4s linear infinite}
+.climber{animation:bob 3.4s ease-in-out infinite}
+.climb-leg{transform-origin:266px 104px;animation:legKick 1.8s ease-in-out infinite}
+.puff{opacity:0;animation:smokePuff 4.2s ease-out infinite}
+.puff.p2{animation-delay:1.4s}
+.puff.p3{animation-delay:2.8s}
+.spark{animation:sparkFlicker 1.1s ease-in-out infinite}
+.spark.s2{animation-delay:.55s}
+
+/* Mobile header — about 25% less vertical room; desktop untouched */
+@media(max-width:640px){
+  .top-in{padding:12px 0 10px;gap:8px}
+  .brand{gap:6px}
+  .brand-mark{width:72px;height:72px;border-radius:10px}
+  .brand-name{font-size:24px}
+  .brand-name small{font-size:10px;margin-top:3px}
+  nav.main{gap:4px}
+  nav.main a{padding:6px 11px;font-size:14px}
+  .crew-scene{width:76%}
+}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;text-decoration:none;font-weight:700;font-size:18px;padding:15px 28px;border-radius:999px;transition:transform .15s ease, box-shadow .15s ease}
 .btn:active{transform:scale(.98)}
 .btn-neon{background:var(--neon);color:#fff;box-shadow:var(--glow)}
@@ -158,6 +194,78 @@ footer a{color:var(--neon)}
       <a href="#estimate">Estimate</a>
       <a href="#schedule">Schedule</a>
     </nav>
+    <div class="crew-scene" aria-hidden="true">
+      <svg viewBox="0 0 640 170" role="presentation" focusable="false">
+        <g class="drift">
+          <!-- smoke puffs -->
+          <circle class="puff" cx="208" cy="26" r="7" fill="#9adfe6"/>
+          <circle class="puff p2" cx="208" cy="26" r="9" fill="#9adfe6"/>
+          <circle class="puff p3" cx="208" cy="26" r="6" fill="#ffd9c2"/>
+          <!-- chimney -->
+          <rect x="188" y="34" width="42" height="66" fill="#2b2b30" stroke="#f04e00" stroke-width="2"/>
+          <rect x="182" y="28" width="54" height="10" fill="#3a3a41" stroke="#f04e00" stroke-width="2"/>
+          <line x1="188" y1="56" x2="230" y2="56" stroke="#45454d" stroke-width="2"/>
+          <line x1="188" y1="78" x2="230" y2="78" stroke="#45454d" stroke-width="2"/>
+          <!-- sweeper on the chimney top -->
+          <g class="sweeper">
+            <g class="brush-dip">
+              <g class="sweep-arm">
+                <line x1="196" y1="62" x2="206" y2="46" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/>
+                <g class="brush-head">
+                  <circle cx="206" cy="44" r="6" fill="none" stroke="#22d3ee" stroke-width="3"/>
+                  <line x1="200" y1="44" x2="212" y2="44" stroke="#22d3ee" stroke-width="2"/>
+                  <line x1="206" y1="38" x2="206" y2="50" stroke="#22d3ee" stroke-width="2"/>
+                </g>
+              </g>
+            </g>
+            <circle cx="192" cy="48" r="6" fill="#f7f2ea"/>
+            <rect x="184" y="42" width="16" height="4" rx="2" fill="#f04e00"/>
+            <rect x="188" y="34" width="8" height="9" fill="#f04e00"/>
+            <line x1="192" y1="54" x2="192" y2="72" stroke="#f7f2ea" stroke-width="5" stroke-linecap="round"/>
+            <line x1="192" y1="72" x2="186" y2="88" stroke="#9adfe6" stroke-width="4" stroke-linecap="round"/>
+            <line x1="192" y1="72" x2="199" y2="86" stroke="#9adfe6" stroke-width="4" stroke-linecap="round"/>
+            <line x1="190" y1="60" x2="180" y2="70" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <!-- roofline -->
+          <path d="M60 168 L268 100 L330 100 L470 168" fill="none" stroke="#3a3a41" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M286 100 L286 168" stroke="#2b2b30" stroke-width="4"/>
+          <!-- roof worker with a trowel -->
+          <g class="sweeper">
+            <circle cx="312" cy="66" r="6" fill="#f7f2ea"/>
+            <rect x="304" y="60" width="16" height="4" rx="2" fill="#22d3ee"/>
+            <line x1="312" y1="72" x2="312" y2="90" stroke="#f7f2ea" stroke-width="5" stroke-linecap="round"/>
+            <line x1="312" y1="90" x2="304" y2="100" stroke="#9adfe6" stroke-width="4" stroke-linecap="round"/>
+            <line x1="312" y1="90" x2="321" y2="99" stroke="#9adfe6" stroke-width="4" stroke-linecap="round"/>
+            <line x1="312" y1="78" x2="326" y2="86" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/>
+            <path d="M326 86 l12 3 l-3 6 l-11 -2 z" fill="#22d3ee"/>
+            <line x1="310" y1="78" x2="298" y2="86" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <rect x="330" y="92" width="26" height="8" rx="2" fill="#45454d"/>
+          <!-- ladder -->
+          <line x1="252" y1="168" x2="272" y2="98" stroke="#f04e00" stroke-width="4" stroke-linecap="round"/>
+          <line x1="272" y1="168" x2="290" y2="100" stroke="#f04e00" stroke-width="4" stroke-linecap="round"/>
+          <line x1="258" y1="150" x2="278" y2="150" stroke="#ff7a18" stroke-width="3"/>
+          <line x1="262" y1="132" x2="281" y2="133" stroke="#ff7a18" stroke-width="3"/>
+          <line x1="266" y1="115" x2="285" y2="116" stroke="#ff7a18" stroke-width="3"/>
+          <!-- climber on the ladder -->
+          <g class="climber">
+            <circle cx="270" cy="82" r="6" fill="#f7f2ea"/>
+            <rect x="262" y="76" width="16" height="4" rx="2" fill="#f04e00"/>
+            <line x1="270" y1="88" x2="268" y2="104" stroke="#f7f2ea" stroke-width="5" stroke-linecap="round"/>
+            <line x1="268" y1="104" x2="262" y2="118" stroke="#9adfe6" stroke-width="4" stroke-linecap="round"/>
+            <g class="climb-leg">
+              <line x1="268" y1="104" x2="278" y2="114" stroke="#9adfe6" stroke-width="4" stroke-linecap="round"/>
+            </g>
+            <line x1="269" y1="93" x2="282" y2="102" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/>
+            <line x1="269" y1="93" x2="258" y2="102" stroke="#ff7a18" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <!-- sparks at the work area -->
+          <circle class="spark" cx="352" cy="88" r="2.4" fill="#ffb37a"/>
+          <circle class="spark s2" cx="360" cy="96" r="1.8" fill="#22d3ee"/>
+          <circle class="spark" cx="344" cy="97" r="1.6" fill="#ffb37a"/>
+        </g>
+      </svg>
+    </div>
   </div>
 </header>
 
@@ -167,7 +275,7 @@ footer a{color:var(--neon)}
     <span class="area-pill">📍 Serving the Greater Hardin Co. Area</span>
     <h1>Clean.<br><span style="font-size:.52em;line-height:.95;display:inline-block;letter-spacing:.015em">Code Compliant.</span><br><span class="out">No leaks.</span></h1>
     <div class="hero-ctas">
-      <a class="btn btn-neon" href="#estimate">Estimate Free →</a>
+      <a class="btn btn-neon" href="#estimate">Free Estimate* →</a>
       <a class="btn btn-ghost" href="#schedule">Schedule Now</a>
     </div>
     <div class="hero-photo">
@@ -282,7 +390,7 @@ footer a{color:var(--neon)}
         </article>
       </div>
       <div class="hero-ctas">
-        <a class="btn btn-neon" href="#estimate">Estimate Free →</a>
+        <a class="btn btn-neon" href="#estimate">Free Estimate* →</a>
       </div>
     </div>
   </section>
@@ -307,7 +415,7 @@ footer a{color:var(--neon)}
         </article>
       </div>
       <div class="hero-ctas">
-        <a class="btn btn-neon" href="#estimate">Estimate Free →</a>
+        <a class="btn btn-neon" href="#estimate">Free Estimate* →</a>
       </div>
     </div>
   </section>
@@ -343,13 +451,14 @@ footer a{color:var(--neon)}
   <!-- ESTIMATE FREE -->
   <section id="estimate">
     <div class="wrap">
-      <h2>Estimate <span class="neon-word">Free</span></h2>
+      <h2>Free <span class="neon-word">Estimate*</span></h2>
+      <p class="small" style="margin:10px auto 0">* Free when you submit online.</p>
 
       <form class="panel neon-panel" id="estForm" enctype="multipart/form-data" novalidate>
         <div class="form-grid">
-          <label class="f"><span>Your name *</span><input type="text" id="estName" name="name" required placeholder="Full name" autocomplete="name"></label>
-          <label class="f"><span>Phone *</span><input type="tel" id="estPhone" name="phone" required placeholder="(270) 555-0123" autocomplete="tel"></label>
-          <label class="f full"><span>Email *</span><input type="email" id="estEmail" name="email" required placeholder="you@email.com" autocomplete="email"></label>
+          <label class="f"><span>Your name *</span><input type="text" id="estName" name="name" required placeholder="Jane Miller" autocomplete="name"></label>
+          <label class="f"><span>Phone *</span><input type="tel" id="estPhone" name="phone" required placeholder="(555) 014-2288" autocomplete="tel"></label>
+          <label class="f full"><span>Email *</span><input type="email" id="estEmail" name="email" required placeholder="jane.miller@example.com" autocomplete="email"></label>
           <label class="f full"><span>Service</span>
             <select id="estService" name="service">
               <option>Clean and inspection — $175</option>
@@ -388,10 +497,10 @@ footer a{color:var(--neon)}
 
       <form class="panel teal-panel" id="schForm" novalidate>
         <div class="form-grid">
-          <label class="f"><span>Your name *</span><input type="text" id="schName" required placeholder="Full name" autocomplete="name"></label>
-          <label class="f"><span>Phone *</span><input type="tel" id="schPhone" required placeholder="(270) 555-0123" autocomplete="tel"></label>
-          <label class="f full"><span>Email *</span><input type="email" id="schEmail" required placeholder="you@email.com" autocomplete="email"></label>
-          <label class="f full"><span>Service address (Hardin Co.)</span><input type="text" id="schAddr" placeholder="Street, city" autocomplete="street-address"></label>
+          <label class="f"><span>Your name *</span><input type="text" id="schName" required placeholder="Jane Miller" autocomplete="name"></label>
+          <label class="f"><span>Phone *</span><input type="tel" id="schPhone" required placeholder="(555) 014-2288" autocomplete="tel"></label>
+          <label class="f full"><span>Email *</span><input type="email" id="schEmail" required placeholder="jane.miller@example.com" autocomplete="email"></label>
+          <label class="f full"><span>Service address (Hardin Co.)</span><input type="text" id="schAddr" placeholder="123 Maple St, Elizabethtown" autocomplete="street-address"></label>
           <label class="f full"><span>Service</span>
             <select id="schService">
               <option>Clean and inspection — $175</option>
