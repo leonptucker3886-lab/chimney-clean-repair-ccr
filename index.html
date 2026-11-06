@@ -75,6 +75,14 @@ nav.main a:hover{background:rgba(255,255,255,.13)}
 .svc-body h3{font-size:30px}
 .svc-body h3 em{font-style:normal;color:var(--neon)}
 
+/* What we offer */
+.offer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:30px}
+@media(max-width:760px){.offer-grid{grid-template-columns:1fr}}
+.offer{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px 26px}
+.offer h3{font-size:30px}
+.offer h3 em{font-style:normal;color:var(--neon)}
+.offer p{margin:10px 0 0;font-size:17px;color:var(--muted)}
+
 /* Forms / panels */
 .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;max-width:680px;margin:30px auto 0;text-align:center}
 .panel.neon-panel{border:3px solid var(--neon);box-shadow:var(--glow)}
@@ -116,6 +124,7 @@ footer a{color:var(--neon)}
     <nav class="main" aria-label="Main">
       <a href="#prices">Prices</a>
       <a href="#work">Work</a>
+      <a href="#offer">Offer</a>
       <a href="#estimate">Estimate</a>
       <a href="#schedule">Schedule</a>
     </nav>
@@ -146,11 +155,7 @@ footer a{color:var(--neon)}
           <div class="price-num">$175</div>
         </article>
         <article class="price-line">
-          <h3>Older inserts</h3>
-          <div class="price-num">$250</div>
-        </article>
-        <article class="price-line">
-          <h3>Newer inserts</h3>
+          <h3>Inserts</h3>
           <div class="price-num">$250</div>
         </article>
       </div>
@@ -207,6 +212,34 @@ footer a{color:var(--neon)}
     </div>
   </section>
 
+  <!-- WHAT WE OFFER -->
+  <section id="offer">
+    <div class="wrap">
+      <h2>What We <span class="neon-word">Offer</span></h2>
+      <div class="offer-grid">
+        <article class="offer">
+          <h3>Full <em>Reports</em></h3>
+          <p>You will know the full extent of the issues regarding your chimney system — and have a digital copy.</p>
+        </article>
+
+        <article class="offer">
+          <h3>Customer <em>Portal</em></h3>
+          <p>Once we have established you as a customer, you'll get a link to view all estimates, invoices, and reports.</p>
+        </article>
+
+        <article class="offer">
+          <h3>Direct <em>Messaging</em></h3>
+          <p>No need to wait for a phone call. In the customer portal you can send a message — and every message is saved on both ends.</p>
+        </article>
+
+        <article class="offer">
+          <h3>Insurance <em>Claims</em></h3>
+          <p>We write the report and answer any questions the adjusters need to get the ball rolling. The only thing you have to do is submit our report.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- ESTIMATE FREE -->
   <section id="estimate">
     <div class="wrap">
@@ -220,8 +253,7 @@ footer a{color:var(--neon)}
           <label class="f full"><span>Service</span>
             <select id="estService" name="service">
               <option>Clean and inspection — $175</option>
-              <option>Fireplace insert cleaning — older insert $250</option>
-              <option>Fireplace insert cleaning — newer insert $250</option>
+              <option>Fireplace insert cleaning — $250</option>
               <option>Buck stove cleaning</option>
               <option>Tear down &amp; rebuild — roofline up</option>
               <option>Prefab fireplace removal from siding</option>
@@ -261,8 +293,7 @@ footer a{color:var(--neon)}
           <label class="f full"><span>Service</span>
             <select id="schService">
               <option>Clean and inspection — $175</option>
-              <option>Fireplace insert cleaning — older insert $250</option>
-              <option>Fireplace insert cleaning — newer insert $250</option>
+              <option>Fireplace insert cleaning — $250</option>
               <option>Buck stove cleaning</option>
               <option>Tear down &amp; rebuild — roofline up</option>
               <option>Prefab fireplace removal from siding</option>
