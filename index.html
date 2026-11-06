@@ -53,8 +53,9 @@ nav.main a{text-decoration:none;font-weight:600;padding:9px 15px;border-radius:9
 nav.main a:hover{background:rgba(255,255,255,.13)}
 
 /* Crew animation — the crew at work on a chimney, sitting in the footer */
-.crew-scene{width:100%;max-width:460px;margin:24px auto 0;background:#050505;border:2px solid var(--neon);border-radius:18px;padding:12px 16px 8px;box-shadow:var(--glow)}
+.crew-scene{position:relative;width:100%;max-width:460px;margin:24px auto 0;background:#050505;border:2px solid var(--neon);border-radius:18px;padding:12px 16px 8px;box-shadow:var(--glow)}
 footer .crew-scene{max-width:380px;margin:22px auto 4px}
+.crew-site{position:absolute;left:0;right:0;bottom:10px;text-align:center;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:700;font-size:19px;letter-spacing:.14em;text-transform:lowercase;color:#ffb37a;text-shadow:0 0 8px rgba(240,78,0,.85),0 0 20px rgba(34,211,238,.45);pointer-events:none}
 .crew-scene svg{width:100%;height:auto;display:block}
 @keyframes drift{0%,100%{transform:translateX(0)}50%{transform:translateX(14px)}}
 @keyframes sweepArm{0%,100%{transform:rotate(16deg)}50%{transform:rotate(-24deg)}}
@@ -478,11 +479,9 @@ footer a{color:var(--neon)}
 
 <footer>
   <div class="wrap">
-    <h2 class="brand-name-foot">Chimney<br>&amp; Fireplace — CCR</h2>
-    <p class="cond" style="font-size:24px;color:var(--neon);margin-top:14px">Serving the Greater Hardin Co. Area</p>
-    <p class="brand-tag" style="margin-top:10px">CCR &nbsp;•&nbsp; Hardin Co., KY</p>
-    <p class="small">chimney.leonlink.net<br>info@leonlink.net</p>
+    <p class="small">info@leonlink.net</p>
     <div class="crew-scene" aria-hidden="true">
+      <span class="crew-site">chimney.leonlink.net</span>
       <svg viewBox="0 0 640 170" role="presentation" focusable="false">
         <g class="drift">
           <!-- smoke puffs -->
