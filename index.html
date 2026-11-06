@@ -107,6 +107,17 @@ textarea{min-height:110px;resize:vertical;text-align:left}
 .notice.show{display:block}
 .small{font-size:14px;color:var(--muted)}
 
+/* Schedule — picked dates + time blocks */
+.date-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.date-chip{display:inline-flex;align-items:center;gap:7px;background:color-mix(in srgb, var(--teal) 12%, transparent);border:1.5px solid var(--teal);color:var(--ink);font-weight:700;font-size:15px;border-radius:999px;padding:6px 8px 6px 14px}
+.date-chip button{width:22px;height:22px;border-radius:999px;border:0;background:var(--teal);color:#fff;font-weight:800;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;padding:0}
+.blocks{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.blocks label{cursor:pointer}
+.blocks input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.blocks .block{display:inline-flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:30px;letter-spacing:.02em;border:2px solid var(--line);background:var(--bg2);color:var(--ink);border-radius:14px;padding:10px 22px;min-width:118px;transition:border-color .15s,background .15s,color .15s}
+.blocks input:checked + .block{border-color:var(--teal);background:var(--teal);color:#fff}
+.blocks input:focus-visible + .block{outline:3px solid var(--neon);outline-offset:2px}
+
 /* Footer */
 footer{background:var(--bg2);color:var(--ink);padding:44px 0 34px;margin-top:20px;border-top:3px solid var(--neon)}
 footer h2{color:var(--ink)}
@@ -285,10 +296,11 @@ footer a{color:var(--neon)}
     <div class="wrap">
       <h2>Schedule <span class="neon-word">Now</span></h2>
 
-      <form class="panel teal-panel" id="schForm">
+      <form class="panel teal-panel" id="schForm" novalidate>
         <div class="form-grid">
-          <label class="f"><span>Your name</span><input type="text" id="schName" required placeholder="Full name" autocomplete="name"></label>
-          <label class="f"><span>Phone</span><input type="tel" id="schPhone" placeholder="(270) 555-0123" autocomplete="tel"></label>
+          <label class="f"><span>Your name *</span><input type="text" id="schName" required placeholder="Full name" autocomplete="name"></label>
+          <label class="f"><span>Phone *</span><input type="tel" id="schPhone" required placeholder="(270) 555-0123" autocomplete="tel"></label>
+          <label class="f full"><span>Email *</span><input type="email" id="schEmail" required placeholder="you@email.com" autocomplete="email"></label>
           <label class="f full"><span>Service address (Hardin Co.)</span><input type="text" id="schAddr" placeholder="Street, city" autocomplete="street-address"></label>
           <label class="f full"><span>Service</span>
             <select id="schService">
@@ -301,21 +313,27 @@ footer a{color:var(--neon)}
               <option>Leaky chimney repair</option>
             </select>
           </label>
-          <label class="f"><span>Preferred date</span><input type="date" id="schDate" required></label>
-          <label class="f"><span>Preferred time</span>
-            <select id="schTime">
-              <option value="09:00">9:00 AM</option>
-              <option value="11:00">11:00 AM</option>
-              <option value="13:00" selected>1:00 PM</option>
-              <option value="15:00">3:00 PM</option>
-              <option value="17:00">5:00 PM</option>
-            </select>
-          </label>
-          <label class="f full"><span>Notes</span><textarea id="schNotes" style="min-height:70px" placeholder="Gate code, dogs, access…"></textarea></label>
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px">
-          <button class="btn btn-teal" type="submit">📅 Add to Google Calendar</button>
+
+        <label class="f"><span>What dates work best for you? *</span>
+          <input type="date" id="schDate">
+        </label>
+        <button class="btn btn-teal btn-small" type="button" id="schAddDate">+ Add Date</button>
+        <div class="date-chips" id="schDates" aria-live="polite"></div>
+        <p class="small" id="schDatesMeta" style="margin:8px 0 0">No dates picked yet — add one or more.</p>
+
+        <div style="margin-top:20px">
+          <span style="display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:700">Time block *</span>
+          <div class="blocks" role="radiogroup" aria-label="Time block">
+            <label><input type="radio" name="schBlock" value="9–12"><span class="block">9–12</span></label>
+            <label><input type="radio" name="schBlock" value="12–3"><span class="block">12–3</span></label>
+            <label><input type="radio" name="schBlock" value="3–6"><span class="block">3–6</span></label>
+          </div>
         </div>
+
+        <label class="f" style="margin-top:20px"><span>Notes</span><textarea id="schNotes" style="min-height:70px" placeholder="Gate code, dogs, access…"></textarea></label>
+
+        <button class="btn btn-teal" type="submit" id="schSubmitBtn" style="width:100%;margin-top:6px;font-size:19px;padding:16px 22px">Send Request →</button>
         <div class="notice" id="schNotice" role="status"></div>
       </form>
     </div>
@@ -452,48 +470,129 @@ document.getElementById('estForm').addEventListener('submit', function(e){
 });
 renderThumbs();
 
-/* ---------- SCHEDULE NOW ---------- */
-function schParts(){
-  var d = document.getElementById('schDate').value;
-  var t = document.getElementById('schTime').value;
-  var start = null, end = null;
-  if (d && t){
-    start = new Date(d + 'T' + t + ':00');
-    end = new Date(start.getTime() + 90*60000);
-  }
-  return {
-    name: document.getElementById('schName').value,
-    phone: document.getElementById('schPhone').value,
-    addr: document.getElementById('schAddr').value,
-    svc: document.getElementById('schService').value,
-    notes: document.getElementById('schNotes').value,
-    start: start, end: end
-  };
+/* ---------- SCHEDULE NOW — dates + time block emailed to CCR ---------- */
+var schPicked = [];
+var schDateInput = document.getElementById('schDate');
+var schDatesBox = document.getElementById('schDates');
+var schDatesMeta = document.getElementById('schDatesMeta');
+
+function fmtDateNice(iso){
+  var d = new Date(iso + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
 }
-function fmtCal(dt){ return dt.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z'; }
-function gcalURL(p){
-  var text = 'CCR — ' + p.svc;
-  var details = ['Chimney Clean & Repair CCR appointment', 'Name: ' + p.name, 'Phone: ' + p.phone, 'Service: ' + p.svc, 'Notes: ' + p.notes, 'Booked at chimney.leonlink.net'].join('\n');
-  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(text) +
-    '&dates=' + fmtCal(p.start) + '/' + fmtCal(p.end) +
-    '&details=' + encodeURIComponent(details) +
-    '&location=' + encodeURIComponent(p.addr);
+function renderSchDates(){
+  schDatesBox.innerHTML = '';
+  schPicked.forEach(function(iso, idx){
+    var chip = document.createElement('span'); chip.className = 'date-chip';
+    var txt = document.createElement('span'); txt.textContent = fmtDateNice(iso);
+    var btn = document.createElement('button'); btn.type = 'button'; btn.textContent = '×';
+    btn.setAttribute('aria-label', 'Remove ' + fmtDateNice(iso));
+    btn.addEventListener('click', function(){ schPicked.splice(idx, 1); renderSchDates(); });
+    chip.appendChild(txt); chip.appendChild(btn); schDatesBox.appendChild(chip);
+  });
+  schDatesMeta.textContent = schPicked.length
+    ? schPicked.length + ' date' + (schPicked.length > 1 ? 's' : '') + ' picked.'
+    : 'No dates picked yet — add one or more.';
+}
+function addSchDate(){
+  var v = schDateInput.value;
+  if (!v){
+    showSchNotice('<b>Pick a date first</b> — tap the date field, choose a day, then tap Add Date.', 'error');
+    schDateInput.focus(); return;
+  }
+  if (schPicked.indexOf(v) === -1){
+    schPicked.push(v);
+    schPicked.sort();
+    renderSchDates();
+  }
+  schDateInput.value = '';
+  schDateInput.focus();
+}
+document.getElementById('schAddDate').addEventListener('click', addSchDate);
+function showSchNotice(html, kind){
+  var n = document.getElementById('schNotice');
+  n.className = 'notice show ' + (kind || '');
+  n.innerHTML = html;
+  n.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 document.getElementById('schForm').addEventListener('submit', function(e){
   e.preventDefault();
-  var p = schParts();
-  if (!p.start){ return; }
-  window.open(gcalURL(p), '_blank', 'noopener');
-  var n = document.getElementById('schNotice');
-  n.className = 'notice show';
-  n.innerHTML = '<b>Google Calendar opened</b> with your appointment pre-filled — save it there and it syncs to your phone.';
+  // Include whatever is still sitting in the date field
+  if (schDateInput.value && schPicked.indexOf(schDateInput.value) === -1){
+    schPicked.push(schDateInput.value);
+    schPicked.sort();
+    renderSchDates();
+  }
+  var name = document.getElementById('schName').value.trim();
+  var phone = document.getElementById('schPhone').value.trim();
+  var email = document.getElementById('schEmail').value.trim();
+  var addr = document.getElementById('schAddr').value.trim();
+  var svc = document.getElementById('schService').value;
+  var notes = document.getElementById('schNotes').value.trim();
+  var blockEl = document.querySelector('input[name="schBlock"]:checked');
+  var block = blockEl ? blockEl.value : '';
+
+  if (!name || !phone || !email){
+    showSchNotice('<b>Almost there —</b> add your name, phone, and email so we can confirm your time.', 'error');
+    return;
+  }
+  if (email.indexOf('@') < 1 || email.indexOf('.') < 3){
+    showSchNotice('<b>Check your email —</b> that address doesn\u2019t look complete. We need it to confirm your time.', 'error');
+    document.getElementById('schEmail').focus(); return;
+  }
+  if (!schPicked.length){
+    showSchNotice('<b>Pick your dates —</b> add at least one date that works for you.', 'error');
+    schDateInput.focus(); return;
+  }
+  if (!block){
+    showSchNotice('<b>Pick a time block —</b> 9–12, 12–3, or 3–6.', 'error');
+    return;
+  }
+
+  var datesText = schPicked.map(fmtDateNice).join('; ');
+  var btn = document.getElementById('schSubmitBtn');
+  var oldBtn = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Sending request to CCR…'; btn.style.opacity = '.75';
+  showSchNotice('Sending to <b>info@leonlink.net</b> — hang tight, don\u2019t close this tab…', '');
+
+  var fd = new FormData();
+  fd.append('name', name);
+  fd.append('phone', phone);
+  fd.append('email', email);
+  fd.append('_replyto', email);
+  fd.append('service', svc);
+  fd.append('address', addr);
+  fd.append('dates', datesText);
+  fd.append('time_block', block);
+  fd.append('notes', notes);
+  fd.append('_subject', 'Schedule Request — ' + svc + ' — ' + name);
+  fd.append('_template', 'table');
+  fd.append('_captcha', 'false');
+  fd.append('source', 'chimney.leonlink.net — Schedule Now');
+
+  fetch('https://formsubmit.co/ajax/info@leonlink.net', { method:'POST', body: fd, headers:{ 'Accept':'application/json' } })
+    .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok:r.ok, json:j }; }); })
+    .then(function(res){
+      if (!res.ok && !(res.json && (res.json.success === 'true' || res.json.success === true))){
+        throw new Error('send failed');
+      }
+      showSchNotice('<b>✅ Request sent.</b> Your dates (' + datesText.replace(/</g,'&lt;') + ') and time block (' + block + ') just emailed to CCR at <b>info@leonlink.net</b>. We\u2019ll reply to <b>' + email.replace(/</g,'&lt;') + '</b> to confirm.', 'success');
+      btn.textContent = '✓ Sent — Send Another Request';
+      btn.disabled = false; btn.style.opacity = '1';
+    })
+    .catch(function(){
+      btn.disabled = false; btn.textContent = oldBtn; btn.style.opacity = '1';
+      showSchNotice('<b>Send didn\u2019t go through.</b> Check your connection and tap send again.', 'error');
+    });
 });
-/* default date = tomorrow */
+/* date field: today or later, starts on tomorrow */
 (function(){
-  var d = new Date(); d.setDate(d.getDate()+1);
-  document.getElementById('schDate').value = d.toISOString().slice(0,10);
-  document.getElementById('schDate').min = new Date().toISOString().slice(0,10);
+  var today = new Date();
+  schDateInput.min = today.toISOString().slice(0, 10);
+  var d = new Date(); d.setDate(d.getDate() + 1);
+  schDateInput.value = d.toISOString().slice(0, 10);
 })();
+renderSchDates();
 </script>
 </body>
 </html>
